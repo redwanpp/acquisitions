@@ -5,6 +5,20 @@ import logger from '#config/logger.js';
 
 const securityMiddleware = async (req, res, next) => {
   try {
+    // Skip Arcjet in development for easier testing
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
+    if (isDevelopment) {
+      // In development, just log and allow all requests
+      logger.debug('Development mode: Skipping Arcjet security checks', {
+        ip: req.ip,
+        userAgent: req.get('User-Agent'),
+        path: req.path,
+        method: req.method,
+      });
+      return next();
+    }
+
     const role = req.user?.role || 'guest';
 
     let limit;

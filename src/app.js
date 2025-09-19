@@ -22,7 +22,9 @@ app.use(
   })
 );
 
-app.use(securityMiddleware);
+if (process.env.NODE_ENV === 'production') {
+  app.use(securityMiddleware);
+}
 
 app.get('/', (req, res) => {
   logger.info('Hello from Acquisition!');
